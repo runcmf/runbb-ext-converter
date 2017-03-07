@@ -1,0 +1,43 @@
+{% extends '@forum/adminLayout.html.twig' %}
+
+{% block content %}
+    <div class="panel panel-primary">
+        {#<input type="hidden" name="csrf_name" value="{{ csrf_name }}">#}
+        {#<input type="hidden" name="csrf_value" value="{{ csrf_value }}">#}
+        {#<input type="hidden" name="form_sent" value="1" />#}
+
+        <div class="panel-heading">
+            <h3 class="panel-title">RunBB Converter</h3>
+        </div>
+
+        <div class="list-group">
+            {% for row in converters %}
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <span class="bg-success">{{ row.info.Title }}</span><br>
+                            {{ row.Forum }}
+                        </div>
+                        <div class="col-sm-8">
+                            <strong>Defaults:</strong> DB Name: {{ row.info.dbName }}, Tables Prefix: {{ row.info.dbPrefix }}<br />
+                            {#<strong>Parts:</strong> <small>{{ row.parts|join(' / ') }}</small><br />#}
+                            <strong>Tables:</strong> <small>{{ row.tables|keys|join(' ') }}</small><br />
+                            <small class="bg-danger">{{ row.info.info|raw }}</small>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-warning btn-sm" href="{{ pathFor('Converter.faker.display') }}?fakeBoard={{ row.name }}">Fake</a>
+                            {% if row.name != 'RunBB' %}
+                            <a class="btn btn-danger btn-sm" href="{{ pathFor('Converter.home.convert') }}?convertBoard={{ row.name }}">Run Converter</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="panel-footer">
+            {#<input class="btn btn-primary" type="submit" name="save" value="Run Converter" />#}
+            <small>some info here</small> {{ dbg }}
+        </div>
+    </div>
+{% endblock content %}

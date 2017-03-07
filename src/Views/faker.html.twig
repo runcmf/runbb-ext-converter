@@ -1,0 +1,74 @@
+{% extends '@forum/adminLayout.html.twig' %}
+
+{% block content %}
+    <form class="panel panel-primary" method="post" action="{{ pathFor('Converter.faker.display') }}">
+        <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+        <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+        <input type="hidden" name="form_sent" value="1">
+        <input type="hidden" name="fakeBoard" value="{{ board }}">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">Fake {{ board }}</h3>
+        </div>
+
+        <div class="list-group">
+            {#<div class="list-group-item">#}
+                {#<div class="row">#}
+                    {#<div class="col-sm-2">#}
+                        {#&nbsp;#}
+                    {#</div>#}
+                    {#<div class="col-sm-8 text-center">#}
+                        {#<strong>Tables:</strong> <small>{{ boardInfo.tables|keys|join(' ') }}</small><br />#}
+                        {#<span class="bg-success">{{ boardInfo.info.Forum }}</span>#}
+                    {#</div>#}
+                    {#<div class="col-sm-2">#}
+                        {#&nbsp;#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+            <div class="list-group-item list-group-item-info">
+                <div class="row">
+                    <div class="col-sm-2">
+                        table
+                    </div>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-2">
+                        suggestion
+                    </div>
+                </div>
+            </div>
+            {% for row, key in boardInfo.tables %}
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <span class="bg-success">{{ row }}</span><br>
+                        </div>
+                        <div class="col-sm-8">
+                            {#{% for key, vars in keys %}#}
+                            {#<div class="row form-inline">#}
+                                {#<div class="col-sm-5"><mark>{{ key }}</mark> <code>{{ vars|join(' ') }}</code></div>#}
+                                {#<div class="col-sm-7">#}
+                                    {#<select name="provider[{{ row }}][{{ key }}]" class="form-control">#}
+                                        {#{% for row in providers %}#}
+                                        {#<option value="{{ row }}">{{ row }}</option>#}
+                                        {#{% endfor %}#}
+                                    {#</select>#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#{% endfor %}#}
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-control" type="number" name="fakerTables[{{ row }}]" min="1" maxlength="10" value="{{ key }}" />
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="panel-footer">
+            <input class="btn btn-primary" type="submit" name="save" value="Fake" />
+        </div>
+    </form>
+{% endblock content %}

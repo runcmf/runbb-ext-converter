@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; url={{ url }}" />
+</head>
+
+<body>
+    <p><br /></p>
+    <div align="center"><h2>Please wait</h2></div>
+    <div align="center">Fill data is too long operation</div>
+    <div align="center">Go a brew of coffee :)</div>
+    <div align="center">&nbsp;</div>
+    <div align="center">total time: {{ time|round|date('H:i:s') }}</div>
+    <div align="center">&nbsp;</div>
+
+    {% if tables is not empty %}
+    <div align="center">tables left:</div>
+    <div style="margin: auto; width: 350px; border: 1px dotted gray; padding: 5px;">
+        {% for t, v in tables %}
+            {{ t }} => {{ v }}<br />
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <br><br>
+    <p align="center">Now work with table: <strong>{{ table }}</strong>, with count to finish: <strong>{{ count }}</strong></p>
+    <div align="center">
+        <p> If counter not changed too long time, follow this <a href="{{ url }}">link</a></p>
+    </div>
+</body>
+</html>

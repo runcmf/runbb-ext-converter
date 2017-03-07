@@ -1,0 +1,48 @@
+{
+  "name": "runcmf/runbb-ext-converter",
+  "description": "RunBB forum converter extension with Faker",
+  "license": "Apache-2.0",
+  "type": "library",
+  "keywords": [
+    "RunCMF",
+    "RunBB",
+    "Slim3",
+    "Slim 3",
+    "Converter",
+    "Faker",
+    "plugin"
+  ],
+  "authors": [
+    {
+      "name": "Vladimir",
+      "email": "1f7.wizard@gmail.com",
+      "homepage": "http://dev.runetcms.ru"
+    }
+  ],
+  "require": {
+    "runcmf/runbb": "dev-master",
+    "fzaninotto/faker": "^1.6"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.8",
+    "phpunit/phpunit": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "RunPMS\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": [
+      "@phpunit",
+      "@phpcs"
+    ],
+    "phpunit": "php vendor/bin/phpunit",
+    "phpcs": "php vendor/bin/phpcs"
+  }
+}
