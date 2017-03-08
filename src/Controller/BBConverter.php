@@ -30,4 +30,14 @@ class BBConverter extends Common
             'converters' => $this->getConvertersInfo(),
         ])->display('@converter/info');
     }
+
+    public function index($req, $res, $args)
+    {
+        $repair = Input::query('repair', 0);
+        if($repair>0) {
+            self::repair();
+
+            return Router::redirect(Router::pathFor('adminLogs'), ['success', 'Congratulations! All Done!']);
+        }
+    }
 }

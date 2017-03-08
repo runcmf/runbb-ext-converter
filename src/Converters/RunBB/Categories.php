@@ -22,10 +22,33 @@ use BBConverter\Common;
 class Categories extends Common
 {
     private static $table = 'categories';
-
+/*
+CREATE TABLE `runbb_categories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cat_name` varchar(80) NOT NULL DEFAULT 'New Category',
+  `disp_position` int(10) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ */
     public static function fake($count = null)
     {
-        return self::runTest(self::$table, $count);
+//tdie(Info::$tables['topics']);
+//tdie(self::$faker->title());
+//        return self::runTest(self::$table, $count);
+        for ($i = 1; $i <= $count; $i++) {
+            $data = [
+                'cat_name' => self::$faker->text(80),
+                'disp_position' => $i
+            ];
+            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            if($i === self::$limit) {
+                $count = $count - $i;
+                self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
+                return $count;
+            }
+        }
+        self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
+        return null;
     }
 
     public static function convert()

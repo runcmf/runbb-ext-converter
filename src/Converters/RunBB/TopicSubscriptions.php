@@ -19,40 +19,22 @@ namespace BBConverter\Converters\RunBB;
 
 use BBConverter\Common;
 
-class Posts extends Common
+class TopicSubscriptions extends Common
 {
-    private static $table = 'posts';
+    private static $table = 'topic_subscriptions';
 /*
-CREATE TABLE `runbb_posts` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `poster` varchar(200) NOT NULL DEFAULT '',
-  `poster_id` int(10) unsigned NOT NULL DEFAULT 1,
-  `poster_ip` varchar(39) DEFAULT NULL,
-  `poster_email` varchar(80) DEFAULT NULL,
-  `message` mediumtext DEFAULT NULL,
-  `hide_smilies` tinyint(1) NOT NULL DEFAULT 0,
-  `posted` int(10) unsigned NOT NULL DEFAULT 0,
-  `edited` int(10) unsigned DEFAULT NULL,
-  `edited_by` varchar(200) DEFAULT NULL,
+CREATE TABLE `runbb_topic_subscriptions` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
   `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `posts_topic_id_idx` (`topic_id`),
-  KEY `posts_multi_idx` (`poster_id`,`topic_id`)
+  PRIMARY KEY (`user_id`,`topic_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
  */
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
         for ($i = 1; $i <= $count; $i++) {
             $data = [
-                'poster' => self::$faker->name(),
-                'poster_id' => self::$faker->numberBetween(1, Info::$tables['users']),
-                'poster_ip' => self::$faker->ipv4(),
-                'poster_email' => self::$faker->safeEmail(),
-                'message' => self::$faker->text(550),
-                'posted' => self::$faker->unixTime('now'),
+                'user_id' => self::$faker->numberBetween(2, Info::$tables['users']),
                 'topic_id' => self::$faker->numberBetween(1, Info::$tables['topics'])
             ];
             self::addData(ORM_TABLE_PREFIX.self::$table, $data);

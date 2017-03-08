@@ -22,10 +22,31 @@ use BBConverter\Common;
 class Censoring extends Common
 {
     private static $table = 'censoring';
-
+/*
+CREATE TABLE `runbb_censoring` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `search_for` varchar(60) NOT NULL DEFAULT '',
+  `replace_with` varchar(60) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ */
     public static function fake($count = null)
     {
-        return self::runTest(self::$table, $count);
+//        return self::runTest(self::$table, $count);
+        for ($i = 1; $i <= $count; $i++) {
+            $data = [
+                'search_for' => self::$faker->word(),
+                'replace_with' => self::$faker->word()
+            ];
+            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            if($i === self::$limit) {
+                $count = $count - $i;
+                self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
+                return $count;
+            }
+        }
+        self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
+        return null;
     }
 
     public static function convert()

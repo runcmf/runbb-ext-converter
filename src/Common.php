@@ -21,11 +21,14 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RunBB\Core\AdminUtils;
 use RunBB\Exception\RunBBException;
+use Faker\Factory;
 
 class Common
 {
     protected $timer = 0;
     protected static $storage = 'BBConverter';
+    public static $faker;
+    public static $limit = 3000;
 
     public function __construct()
     {
@@ -41,6 +44,7 @@ class Common
             Router::pathFor('Converter.home') => 'Converter Index'
         ];
         AdminUtils::generateAdminMenu('admin-converter');
+        static::$faker = Factory::create();
     }
 
     public function getConvertersInfo($dir=false)
@@ -123,7 +127,7 @@ class Common
         return $t->save();
     }
 
-    private static function pushLog($table, $count, $time)
+    public static function pushLog($table, $count, $time)
     {
         $_SESSION['fakeTime'] = $_SESSION['fakeTime'] + $time;
         Log::info('fill table: '.$table.', with count to end: '.$count.', by: '.$time);
@@ -139,7 +143,7 @@ class Common
     {
         for ($i = 1; $i <= $count; $i++) {
             usleep(2000);// 2 mill for emulate query
-            if($i === 3000) {
+            if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog($table, $count, (microtime(true) - Container::get('start')));
                 return $count;
@@ -147,5 +151,20 @@ class Common
         }
         self::pushLog($table, $count, (microtime(true) - Container::get('start')));
         return null;
+    }
+
+    /**
+     * repair forum after fill fake data
+     */
+    protected function repair()
+    {
+        Repairer::forumPostSync();
+        Repairer::topicPostSync();
+        Repairer::userPostSync();
+        Repairer::forumLastPost();
+        Repairer::topicLastPost();
+        Repairer::deleteOrphans();
+
+        Container::get('cache')->flush();
     }
 }

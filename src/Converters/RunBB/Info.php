@@ -34,12 +34,12 @@ class Info
     public static $tables = [
         'categories' => 25,
         'censoring' => 1000,
-        'forums' => 1000,
+        'forums' => 500,
         'forum_perms' => 100,
-        'forum_subscriptions' => 15000,
+        'forum_subscriptions' => 500,
         'posts' => 200000,
-        'topics' => 100000,
-        'topics_subscriptions' => 15000,
+        'topics' => 50000,
+        'topic_subscriptions' => 500,
         'users' => 15000,
     ];
 
