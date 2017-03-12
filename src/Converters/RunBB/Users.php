@@ -71,8 +71,7 @@ CREATE TABLE `runbb_users` (
   UNIQUE KEY `users_username_idx` (`username`(25)),
   KEY `users_registered_idx` (`registered`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
- */
+*/
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
@@ -92,7 +91,7 @@ CREATE TABLE `runbb_users` (
                 'num_posts' => self::$faker->numberBetween(99, 499),
                 'last_visit' => self::$faker->unixTime('now')
             ];
-            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            self::addData(self::$table, $data);
             if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
@@ -103,7 +102,7 @@ CREATE TABLE `runbb_users` (
         return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

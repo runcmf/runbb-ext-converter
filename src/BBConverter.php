@@ -101,8 +101,13 @@ class BBConverter extends Plugin
             $this->map(
                 ['GET', 'POST'],
                 '/convert',
-                '\BBConverter\Controller\BBConverter:convert'
-            )->setName('Converter.home.convert');
+                '\BBConverter\Controller\BBConverter:display'
+            )->setName('Converter.convert.display');
+            $this->map(
+                ['GET', 'POST'],
+                '/runConvert',
+                '\BBConverter\Controller\BBConverter:run'
+            )->setName('Converter.convert.run');
         })->add(new IsAdmin());
     }
 

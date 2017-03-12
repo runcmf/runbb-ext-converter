@@ -15,13 +15,41 @@
  * limitations under the License.
  */
 
-namespace BBConverter\Converters\RunBB;
+namespace BBConverter\Converters\Punbb;
 
 use BBConverter\Common;
 
 class Categories extends Common
 {
     private static $table = 'categories';
+
+    public static function fake($count)
+    {
+        // some as RunBB
+        return \BBConverter\Converters\RunBB\Categories::fake($count);
+    }
+
+    public static function convert($count, $tableTo)
+    {
+        $start = $_SESSION['convertStartFrom'];
+        $board = $_SESSION['fakeBoard'];
+
+        $data = DB::forTable(self::$table, $board)
+            ->offset($start)
+            ->limit(self::$limit)
+            ->orderByAsc('id')
+            ->findMany();
+        $i = 0;
+        foreach ($data as $row) {
+            $i++;
+/*
+CREATE TABLE `punbb_categories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cat_name` varchar(80) NOT NULL DEFAULT 'New Category',
+  `disp_position` int(10) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+*/
 /*
 CREATE TABLE `runbb_categories` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -30,27 +58,20 @@ CREATE TABLE `runbb_categories` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 */
-    public static function fake($count = null)
-    {
-//        return self::runTest(self::$table, $count);
-        for ($i = 1; $i <= $count; $i++) {
-            $data = [
-                'cat_name' => self::$faker->text(80),
-                'disp_position' => $i
+            $newData = [
+                'id' => $row->id,
+                'cat_name' => $row->cat_name,
+                'disp_position' => $row->disp_position
             ];
-            self::addData(self::$table, $data);
+            self::insertData($tableTo, $newData);
             if($i === self::$limit) {
                 $count = $count - $i;
+                $_SESSION['convertStartFrom'] = $_SESSION['convertStartFrom'] + $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
                 return $count;
             }
         }
-        self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
+        self::pushLog(self::$table, $start, (microtime(true) - Container::get('start')));
         return null;
-    }
-
-    public static function convert($start, $board, $count)
-    {
-        //
     }
 }

@@ -39,23 +39,21 @@ CREATE TABLE `runbb_posts` (
   KEY `posts_topic_id_idx` (`topic_id`),
   KEY `posts_multi_idx` (`poster_id`,`topic_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
- */
+*/
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
         for ($i = 1; $i <= $count; $i++) {
             $data = [
                 'poster' => self::$faker->name(),
-                'poster_id' => self::$faker->numberBetween(1, Info::$tables['users']),
+                'poster_id' => self::$faker->numberBetween(1, Info::$tables['users']['fakeCount']),
                 'poster_ip' => self::$faker->ipv4(),
                 'poster_email' => self::$faker->safeEmail(),
                 'message' => self::$faker->text(550),
                 'posted' => self::$faker->unixTime('now'),
-                'topic_id' => self::$faker->numberBetween(1, Info::$tables['topics'])
+                'topic_id' => self::$faker->numberBetween(1, Info::$tables['topics']['fakeCount'])
             ];
-            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            self::addData(self::$table, $data);
             if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
@@ -66,7 +64,7 @@ CREATE TABLE `runbb_posts` (
         return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

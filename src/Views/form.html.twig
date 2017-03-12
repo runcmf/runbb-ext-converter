@@ -1,14 +1,14 @@
 {% extends '@forum/adminLayout.html.twig' %}
 
 {% block content %}
-    <form class="panel panel-primary" method="post" action="{{ pathFor('Converter.faker.display') }}">
+    <form class="panel panel-primary" method="post" action="{{ formAction }}">
         <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
         <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
         <input type="hidden" name="form_sent" value="1">
         <input type="hidden" name="fakeBoard" value="{{ board }}">
 
         <div class="panel-heading">
-            <h3 class="panel-title">Fake {{ board }}</h3>
+            <h3 class="panel-title">{{ action }} {{ board }}</h3>
         </div>
 
         <div class="list-group">
@@ -60,15 +60,46 @@
                             {#{% endfor %}#}
                         </div>
                         <div class="col-sm-2">
-                            <input class="form-control" type="number" name="fakerTables[{{ row }}]" min="1" maxlength="10" value="{{ key }}" />
+                            <input class="form-control" type="number" name="fakerTables[{{ row }}][fakeCount]" min="1" maxlength="10" value="{{ key.fakeCount }}" />
+                            <input type="hidden" name="fakerTables[{{ row }}][tableTo]" value="{{ key.tableTo }}">
                         </div>
                     </div>
                 </div>
             {% endfor %}
 
+            {% if board != 'RunBB' %}
+            <div class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2">DB host</div>
+                    <div class="col-sm-2">
+                        <input class="form-control" name="db_host" maxlength="16" value="127.0.0.1"/>
+                    </div>
+                    <div class="col-sm-2">DB name</div>
+                    <div class="col-sm-2">
+                        <input class="form-control" name="db_name" maxlength="16" placeholder="punbb144"/>
+                    </div>
+                    <div class="col-sm-2">T. prefix</div>
+                    <div class="col-sm-2">
+                        <input class="form-control" name="db_prefix" maxlength="16" placeholder="punbb_"/>
+                    </div>
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2">DB user</div>
+                    <div class="col-sm-4">
+                        <input class="form-control" name="db_user" maxlength="16" placeholder="dbuser"/>
+                    </div>
+                    <div class="col-sm-2">DB pass</div>
+                    <div class="col-sm-4">
+                        <input class="form-control" name="db_pass" maxlength="16" placeholder="dbpass"/>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
         <div class="panel-footer">
-            <input class="btn btn-primary" type="submit" name="save" value="Fake" />
+            <input class="btn btn-primary" type="submit" name="save" value="Begin" />
         </div>
     </form>
 {% endblock content %}

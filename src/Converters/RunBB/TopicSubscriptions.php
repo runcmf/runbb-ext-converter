@@ -28,16 +28,16 @@ CREATE TABLE `runbb_topic_subscriptions` (
   `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`,`topic_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
- */
+*/
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
         for ($i = 1; $i <= $count; $i++) {
             $data = [
-                'user_id' => self::$faker->numberBetween(2, Info::$tables['users']),
-                'topic_id' => self::$faker->numberBetween(1, Info::$tables['topics'])
+                'user_id' => self::$faker->unique()->numberBetween(2, Info::$tables['users']['fakeCount']),
+                'topic_id' => self::$faker->numberBetween(1, Info::$tables['topics']['fakeCount'])
             ];
-            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            self::addData(self::$table, $data);
             if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
@@ -48,7 +48,7 @@ CREATE TABLE `runbb_topic_subscriptions` (
         return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

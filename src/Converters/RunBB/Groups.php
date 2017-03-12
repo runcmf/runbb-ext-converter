@@ -55,13 +55,14 @@ CREATE TABLE `runbb_groups` (
   `inherit` text DEFAULT NULL,
   PRIMARY KEY (`g_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
- */
+*/
     public static function fake($count = null)
     {
-        return self::runTest(self::$table, $count);
+//        return self::runTest(self::$table, $count);
+        return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

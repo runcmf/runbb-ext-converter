@@ -39,7 +39,7 @@ CREATE TABLE `runbb_forums` (
   `cat_id` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
- */
+*/
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
@@ -48,9 +48,9 @@ CREATE TABLE `runbb_forums` (
                 'forum_name' => self::$faker->text(80),
                 'forum_desc' => self::$faker->text(120),
                 'disp_position' => $i,
-                'cat_id' => self::$faker->numberBetween(1, Info::$tables['categories'])
+                'cat_id' => self::$faker->numberBetween(1, Info::$tables['categories']['fakeCount'])
             ];
-            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            self::addData(self::$table, $data);
             if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
@@ -61,7 +61,7 @@ CREATE TABLE `runbb_forums` (
         return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

@@ -24,7 +24,7 @@ class Info
         'Forum' => 'RunBB',
         'info' => '<strong>Note:</strong> some note will be here.',
         'dbName' => 'fromConfig',
-        'dbPrefix' => ORM_TABLE_PREFIX
+        'dbPrefix' => 'formConfig'
     ];
 
     /**
@@ -32,15 +32,42 @@ class Info
      * @var array
      */
     public static $tables = [
-        'categories' => 25,
-        'censoring' => 1000,
-        'forums' => 500,
-        'forum_perms' => 100,
-        'forum_subscriptions' => 500,
-        'posts' => 200000,
-        'topics' => 50000,
-        'topic_subscriptions' => 500,
-        'users' => 15000,
+        'categories' => [
+            'fakeCount' => 15,
+            'tableTo' => 'categories'
+        ],
+        'censoring' => [
+            'fakeCount' => 1000,
+            'tableTo' => 'censoring'
+        ],
+        'forums' => [
+            'fakeCount' => 100,
+            'tableTo' => 'forums'
+        ],
+        'forum_perms' => [
+            'fakeCount' => 80,
+            'tableTo' => 'forum_perms'
+        ],
+        'forum_subscriptions' => [
+            'fakeCount' => 350,
+            'tableTo' => 'forum_subscriptions'
+        ],
+        'posts' => [
+            'fakeCount' => 200000,
+            'tableTo' => 'posts'
+        ],
+        'topics' => [
+            'fakeCount' => 50000,
+            'tableTo' => 'topics'
+        ],
+        'topic_subscriptions' => [
+            'fakeCount' => 350,
+            'tableTo' => 'topic_subscriptions'
+        ],
+        'users' => [
+            'fakeCount' => 15000,
+            'tableTo' => 'users'
+        ],
     ];
 
     public static function getGroups()

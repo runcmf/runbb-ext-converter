@@ -44,7 +44,7 @@ CREATE TABLE `runbb_topics` (
   KEY `topics_last_post_idx` (`last_post`),
   KEY `topics_first_post_id_idx` (`first_post_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
- */
+*/
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
@@ -53,11 +53,11 @@ CREATE TABLE `runbb_topics` (
                 'poster' => self::$faker->name(),
                 'subject' => self::$faker->text(80),
                 'posted' => self::$faker->unixTime('now'),
-                'last_poster' => self::$faker->numberBetween(2, Info::$tables['users']),
+                'last_poster' => self::$faker->numberBetween(2, Info::$tables['users']['fakeCount']),
                 'num_views' => self::$faker->numberBetween(5, 999),
-                'forum_id' => self::$faker->numberBetween(1, Info::$tables['forums'])
+                'forum_id' => self::$faker->numberBetween(1, Info::$tables['forums']['fakeCount'])
             ];
-            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            self::addData(self::$table, $data);
             if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
@@ -68,7 +68,7 @@ CREATE TABLE `runbb_topics` (
         return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

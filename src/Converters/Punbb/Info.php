@@ -19,6 +19,8 @@ namespace BBConverter\Converters\Punbb;
 
 class Info
 {
+    public static $name = 'PunBB';
+
     public static $settings = [
         'Title' => 'punBB to RunBB',
         'Forum' => 'punBB',
@@ -32,18 +34,46 @@ class Info
      * @var array
      */
     public static $tables = [
-        'categories' => 25,
-        'censoring' => 1000,
-        'config' => 200,
-        'forums' => 1000,
-        'forum_perms' => 100,
-        'forum_subscriptions' => 15000,
-        'groups' => 10,
-        'posts' => 200000,
-        'ranks' => 10,
-        'subscriptions' => 15000,
-        'topics' => 100000,
-        'users' => 15000,
+        'categories' => [
+            'fakeCount' => 10,
+            'tableTo' => 'categories'
+        ],
+        'censoring' => [
+            'fakeCount' => 1000,
+            'tableTo' => 'censoring'
+        ],
+        'forums' => [
+            'fakeCount' => 50,
+            'tableTo' => 'forums'
+        ],
+        'forum_perms' => [
+            'fakeCount' => 90,
+            'tableTo' => 'forum_perms'
+        ],
+        'forum_subscriptions' => [
+            'fakeCount' => 40,
+            'tableTo' => 'forum_subscriptions'
+        ],
+        'groups' => [
+            'fakeCount' => 10,
+            'tableTo' => 'groups'
+        ],
+        'posts' => [
+            'fakeCount' => 200000,
+            'tableTo' => 'posts'
+        ],
+        'subscriptions' => [
+            'fakeCount' => 40,
+            'tableTo' => 'topic_subscriptions'
+        ],
+        'topics' => [
+            'fakeCount' => 50000,
+            'tableTo' => 'topics'
+        ],
+        'users' => [
+            'fakeCount' => 15000,
+            'tableTo' => 'users'
+        ]
     ];
 
     public static function getGroups()

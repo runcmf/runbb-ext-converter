@@ -27,7 +27,7 @@
                         <div class="col-sm-2">
                             <a class="btn btn-warning btn-sm" href="{{ pathFor('Converter.faker.display') }}?fakeBoard={{ row.name }}">Fake</a>
                             {% if row.name != 'RunBB' %}
-                            <a class="btn btn-danger btn-sm" href="{{ pathFor('Converter.home.convert') }}?convertBoard={{ row.name }}">Run Converter</a>
+                            <a class="btn btn-danger btn-sm" href="{{ pathFor('Converter.convert.display') }}?convertBoard={{ row.name }}">Convert</a>
                             {% endif %}
                         </div>
                     </div>
@@ -36,8 +36,7 @@
 
         </div>
         <div class="panel-footer">
-            <a href="{{ pathFor('Converter.home') }}?repair=1" class="btn btn-primary">Run Repair</a>
-            <small>some info here</small> {{ dbg }}
+            <a href="{{ pathFor('Converter.home') }}?repair=1" class="btn btn-primary">Repair</a>
         </div>
     </div>
 {% endblock content %}

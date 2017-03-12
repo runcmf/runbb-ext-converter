@@ -15,41 +15,59 @@
  * limitations under the License.
  */
 
-namespace BBConverter\Converters\RunBB;
+namespace BBConverter\Converters\Punbb;
 
 use BBConverter\Common;
 
 class ForumSubscriptions extends Common
 {
     private static $table = 'forum_subscriptions';
+
+    public static function fake($count = null)
+    {
+        // some as RunBB
+        return \BBConverter\Converters\RunBB\ForumSubscriptions::fake($count);
+    }
+
+    public static function convert($count, $tableTo)
+    {
+        $start = $_SESSION['convertStartFrom'];
+        $board = $_SESSION['fakeBoard'];
+
+        $data = DB::forTable(self::$table, $board)
+            ->offset($start)
+            ->limit(self::$limit)
+            ->orderByAsc('user_id')
+            ->findMany();
+        $i = 0;
+        foreach ($data as $row) {
+            $i++;
 /*
+CREATE TABLE `punbb_forum_subscriptions` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`,`forum_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `runbb_forum_subscriptions` (
   `user_id` int(10) unsigned NOT NULL DEFAULT 0,
   `forum_id` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`,`forum_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 */
-    public static function fake($count = null)
-    {
-//        return self::runTest(self::$table, $count);
-        for ($i = 1; $i <= $count; $i++) {
-            $data = [
-                'user_id' => self::$faker->unique()->numberBetween(1, Info::$tables['users']['fakeCount']),
-                'forum_id' => self::$faker->numberBetween(1, Info::$tables['forums']['fakeCount'])
+            $newData = [
+                'user_id' => $row->user_id,
+                'forum_id' => $row->forum_id
             ];
-            self::addData(self::$table, $data);
+            self::insertData($tableTo, $newData);
             if($i === self::$limit) {
                 $count = $count - $i;
+                $_SESSION['convertStartFrom'] = $_SESSION['convertStartFrom'] + $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
                 return $count;
             }
         }
-        self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
+        self::pushLog(self::$table, $start, (microtime(true) - Container::get('start')));
         return null;
-    }
-
-    public static function convert($start, $board, $count)
-    {
-        //
     }
 }

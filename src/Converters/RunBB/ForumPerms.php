@@ -31,17 +31,16 @@ CREATE TABLE `runbb_forum_perms` (
   `post_topics` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`group_id`,`forum_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
- */
+*/
     public static function fake($count = null)
     {
 //        return self::runTest(self::$table, $count);
         for ($i = 1; $i <= $count; $i++) {
             $data = [
-                'group_id' => self::$faker->numberBetween(1, 6),
-                'forum_id' => $i
+                'group_id' => self::$faker->numberBetween(1, 4),
+                'forum_id' => self::$faker->unique()->numberBetween(1, Info::$tables['forums']['fakeCount']),
             ];
-            self::addData(ORM_TABLE_PREFIX.self::$table, $data);
+            self::addData(self::$table, $data);
             if($i === self::$limit) {
                 $count = $count - $i;
                 self::pushLog(self::$table, $count, (microtime(true) - Container::get('start')));
@@ -52,7 +51,7 @@ CREATE TABLE `runbb_forum_perms` (
         return null;
     }
 
-    public static function convert()
+    public static function convert($start, $board, $count)
     {
         //
     }

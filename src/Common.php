@@ -23,7 +23,7 @@ use RunBB\Core\AdminUtils;
 use RunBB\Exception\RunBBException;
 use Faker\Factory;
 
-class Common
+abstract class Common implements ConverterInterface
 {
     protected $timer = 0;
     protected static $storage = 'BBConverter';
@@ -45,6 +45,11 @@ class Common
         ];
         AdminUtils::generateAdminMenu('admin-converter');
         static::$faker = Factory::create();
+    }
+
+    public function initDBConnection(array $config, $name = '')
+    {
+        DB::init($config, $name);
     }
 
     public function getConvertersInfo($dir=false)
@@ -81,6 +86,11 @@ class Common
         return [];
     }
 
+    /**
+     * Check $_SESSION initialized
+     * @return bool
+     * @throws RunBBException
+     */
     public static function checkStorage()
     {
         if (!isset($_SESSION)) {
@@ -101,35 +111,88 @@ class Common
 
     public function clearTables(array $tables)
     {
-        foreach ($tables as $name => $count) {
-            $this->truncateTable(ORM_TABLE_PREFIX.$name);
+        foreach ($tables as $name => $conf) {
+            $this->truncateTable(DB::prefix().$conf['tableTo']);
         }
     }
 
     public function truncateTable($name = '')
     {
-        return \ORM::forTable($name)->rawExecute('TRUNCATE TABLE `'.$name.'`');
+        if(false !== strpos($name, 'users')) {
+            // do not delete guest adn admin
+            return DB::forTable('users')
+                ->whereGt('id', 2)
+                ->deleteMany();
+        } else {
+            return DB::forTable($name)->rawExecute('TRUNCATE TABLE `' . $name . '`');
+        }
+    }
+
+    protected function countAll($board)
+    {
+        $info = $this->getBoardInfo($board);
+        $ret = [];
+        foreach ($info['tables'] as $table => $conf) {
+            $ret[$table] = [
+                'fakeCount' => $this->countTable($board, $table),
+                'tableTo' => $conf['tableTo']
+            ];
+        }
+        return $ret;
+    }
+
+    /**
+     * Count specified table records
+     * @param $board
+     * @param $table
+     * @return mixed
+     */
+    public function countTable($board, $table)
+    {
+        return DB::forTable($table, $board)->count();
     }
 
     public function countRows(array & $tables)
     {
         $total = 0;
-        foreach ($tables as $t => $count) {
-            $total = $total + $count;
+        foreach ($tables as $t => $vars) {
+            $total = $total + $vars['fakeCount'];
         }
         return $total;
     }
 
+    /**
+     * Add new data to specified Forum or RunBB table
+     * @param $table
+     * @param array $data
+     * @return mixed
+     */
     public static function addData($table, array $data)
     {
-        $t = \ORM::forTable($table)->create();
+        if(!empty($_SESSION['fakeBoard']) && $_SESSION['fakeBoard'] !== 'RunBB') {
+            $t = DB::forTable($table, $_SESSION['fakeBoard'])->create();
+        } else {
+            $t = DB::forTable($table)->create();
+        }
         $t->set($data);
+        return $t->save();
+    }
+
+    /**
+     * Insert new data to RunBB table
+     * @param $table
+     * @param array $data
+     * @return mixed
+     */
+    public static function insertData($table, array $data)
+    {
+        $t = DB::forTable($table)->set($data)->create();
         return $t->save();
     }
 
     public static function pushLog($table, $count, $time)
     {
-        $_SESSION['fakeTime'] = $_SESSION['fakeTime'] + $time;
+        $_SESSION['jobTime'] = $_SESSION['jobTime'] + $time;
         Log::info('fill table: '.$table.', with count to end: '.$count.', by: '.$time);
     }
 
@@ -155,15 +218,16 @@ class Common
 
     /**
      * repair forum after fill fake data
+     * @param string $connName
      */
-    protected function repair()
+    protected function repair($connName = \ORM::DEFAULT_CONNECTION)
     {
-        Repairer::forumPostSync();
-        Repairer::topicPostSync();
-        Repairer::userPostSync();
-        Repairer::forumLastPost();
-        Repairer::topicLastPost();
-        Repairer::deleteOrphans();
+        Repairer::forumPostSync($connName);
+        Repairer::topicPostSync($connName);
+        Repairer::userPostSync($connName);
+        Repairer::forumLastPost($connName);
+        Repairer::topicLastPost($connName);
+        Repairer::deleteOrphans($connName);
 
         Container::get('cache')->flush();
     }
